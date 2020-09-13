@@ -8,8 +8,10 @@ export class TodosController {
   constructor(private todosService: TodosService) {}
 
   @Post()
-  createTodo(@Body(ValidationPipe) createTodo: CreateTodoDto): Promise<Todo> {
-    return this.todosService.create(createTodo)
+  createTodo(
+    @Body(ValidationPipe) createTodoDto: CreateTodoDto
+  ): Promise<Todo> {
+    return this.todosService.create(createTodoDto)
   }
 
   @Get()

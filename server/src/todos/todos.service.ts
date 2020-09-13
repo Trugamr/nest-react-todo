@@ -8,8 +8,8 @@ import { Todo } from './schemas/todo.schema'
 export class TodosService {
   constructor(@InjectModel('Todos') private readonly todoModel: Model<Todo>) {}
 
-  async create(createTodo: CreateTodoDto): Promise<Todo> {
-    const todo = new this.todoModel(createTodo)
+  async create(createTodoDto: CreateTodoDto): Promise<Todo> {
+    const todo = new this.todoModel(createTodoDto)
 
     return await todo.save()
   }
