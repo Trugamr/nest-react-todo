@@ -3,6 +3,9 @@ import { Document } from 'mongoose'
 
 @Schema()
 export class User extends Document {
+  @Prop()
+  _id: string
+
   @Prop({
     required: true,
     unique: true
