@@ -7,9 +7,10 @@ const parseToBoolean = value => {
   return value
 }
 
-export class CreateTodoDto {
+export class FiltersDto {
+  @IsOptional()
   @IsNotEmpty()
-  text: string
+  query: string
 
   @IsBoolean()
   @IsOptional()

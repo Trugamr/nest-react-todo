@@ -7,7 +7,8 @@ const parseToBoolean = value => {
   return value
 }
 
-export class CreateTodoDto {
+export class UpdateTodoDto {
+  @IsOptional()
   @IsNotEmpty()
   text: string
 

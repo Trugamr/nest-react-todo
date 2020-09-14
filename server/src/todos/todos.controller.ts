@@ -4,7 +4,9 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
+  Query,
   UseGuards,
   ValidationPipe
 } from '@nestjs/common'
@@ -16,6 +18,8 @@ import { TodosService } from './todos.service'
 import { Todo } from './models/todo.model'
 import { User } from 'src/auth/models/user.model'
 import { TodoIdDto } from './dto/todo-id.dto'
+import { UpdateTodoDto } from './dto/update-todo.dto'
+import { FiltersDto } from './dto/filters.dto'
 
 @Controller('todos')
 export class TodosController {
@@ -32,19 +36,31 @@ export class TodosController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getTodos(@GetUser() user: User): Promise<Todo[]> {
-    return this.todosService.getTodos(user.id)
+  async getTodos(
+    @GetUser() user: User,
+    @Query(ValidationPipe) filtersDto: FiltersDto
+  ): Promise<Todo[]> {
+    return this.todosService.getTodos(user.id, filtersDto)
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  getTodo(@Param(ValidationPipe) todoIdDto: TodoIdDto) {
+  getTodo(@Param(ValidationPipe) todoIdDto: TodoIdDto): Promise<Todo> {
     return this.todosService.getTodo(todoIdDto)
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('/:id')
-  deleteTodo(@Param(ValidationPipe) todoIdDto: TodoIdDto) {
+  deleteTodo(@Param(ValidationPipe) todoIdDto: TodoIdDto): Promise<void> {
     return this.todosService.deleteTodo(todoIdDto)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('/:id')
+  updateTodo(
+    @Param(ValidationPipe) todoIdDto: TodoIdDto,
+    @Body(ValidationPipe) updateTodoDto: UpdateTodoDto
+  ): Promise<Todo> {
+    return this.todosService.updateTodo(todoIdDto, updateTodoDto)
   }
 }

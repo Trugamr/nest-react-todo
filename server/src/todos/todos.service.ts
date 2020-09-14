@@ -2,7 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { ReturnModelType } from '@typegoose/typegoose'
 import { InjectModel } from 'nestjs-typegoose'
 import { CreateTodoDto } from './dto/create-todo.dto'
+import { FiltersDto } from './dto/filters.dto'
 import { TodoIdDto } from './dto/todo-id.dto'
+import { UpdateTodoDto } from './dto/update-todo.dto'
 import { Todo } from './models/todo.model'
 
 @Injectable()
@@ -23,8 +25,16 @@ export class TodosService {
     return await todo.save()
   }
 
-  async getTodos(userId: string): Promise<Todo[]> {
-    return await this.todoModel.find({ userId }).sort({ updatedAt: 'desc' })
+  async getTodos(userId: string, filtersDto: FiltersDto): Promise<Todo[]> {
+    const { query, ...otherFilters } = filtersDto
+
+    return await this.todoModel
+      .find({
+        userId,
+        text: { $regex: query ? query : '', $options: 'i' },
+        ...otherFilters
+      })
+      .sort({ updatedAt: 'desc' })
   }
 
   async getTodo(todoIdDto: TodoIdDto): Promise<Todo> {
@@ -39,5 +49,21 @@ export class TodosService {
     const todo = await this.todoModel.deleteOne({ _id: todoIdDto.id })
     if (todo && !todo.deletedCount)
       throw new NotFoundException(`Todo with ID "${todoIdDto.id}" not found`)
+  }
+
+  async updateTodo(
+    todoIdDto: TodoIdDto,
+    updateTodoDto: UpdateTodoDto
+  ): Promise<Todo> {
+    const todo = await this.todoModel.findOneAndUpdate(
+      { _id: todoIdDto.id },
+      {
+        ...updateTodoDto
+      },
+      { new: true }
+    )
+    if (!todo)
+      throw new NotFoundException(`Todo with ID "${todoIdDto.id}" not found`)
+    return todo
   }
 }
