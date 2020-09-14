@@ -6,11 +6,14 @@ import { TypegooseModule } from 'nestjs-typegoose'
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: ['.env.development', '.env']
+    }),
     TypegooseModule.forRoot(process.env.DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: true
     }),
     TodosModule,
     AuthModule
