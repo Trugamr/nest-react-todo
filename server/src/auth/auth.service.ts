@@ -12,6 +12,7 @@ import { User } from './schemas/user.schema'
 import * as bcrypt from 'bcrypt'
 import { SignInDto } from './dto/sign-in.dto'
 import { JwtService } from '@nestjs/jwt'
+import { JwtPayload } from './jwt-payload.interface'
 
 @Injectable()
 export class AuthService {
@@ -51,9 +52,9 @@ export class AuthService {
     return user
   }
 
-  async signIn(user: User) {
+  signIn(user: User): { accessToken: string } {
     const { name, email, _id } = user
-    const payload = { name, email, id: _id }
+    const payload: JwtPayload = { name, email, id: _id }
     return {
       accessToken: this.jwtService.sign(payload)
     }

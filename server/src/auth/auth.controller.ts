@@ -25,7 +25,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/signin')
-  signIn(@GetUser() user: User): Promise<{ accessToken: string }> {
+  signIn(@GetUser() user: User): { accessToken: string } {
     return this.authService.signIn(user)
   }
 
@@ -33,5 +33,10 @@ export class AuthController {
   @Get('/me')
   me(@GetUser() user): User {
     return user
+  }
+
+  @Get('/test')
+  test(@Req() req) {
+    console.log(req.cookies)
   }
 }
