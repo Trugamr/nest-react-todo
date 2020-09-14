@@ -2,22 +2,21 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
   UnauthorizedException
 } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 import { SignUpDto } from './dto/sign-up.dto'
-import { User } from './schemas/user.schema'
 import * as bcrypt from 'bcrypt'
 import { SignInDto } from './dto/sign-in.dto'
 import { JwtService } from '@nestjs/jwt'
 import { JwtPayload } from './jwt-payload.interface'
+import { InjectModel } from 'nestjs-typegoose'
+import { User } from './models/user.model'
+import { ReturnModelType } from '@typegoose/typegoose'
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('Users') private userModel: Model<User>,
+    @InjectModel(User) private userModel: ReturnModelType<typeof User>,
     private jwtService: JwtService
   ) {}
 
@@ -53,8 +52,8 @@ export class AuthService {
   }
 
   signIn(user: User): { accessToken: string } {
-    const { name, email, _id } = user
-    const payload: JwtPayload = { name, email, id: _id }
+    const { name, email, id } = user
+    const payload: JwtPayload = { name, email, id }
     return {
       accessToken: this.jwtService.sign(payload)
     }

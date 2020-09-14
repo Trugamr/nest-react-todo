@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { ReturnModelType } from '@typegoose/typegoose'
+import { InjectModel } from 'nestjs-typegoose'
 import { CreateTodoDto } from './dto/create-todo.dto'
-import { Todo } from './schemas/todo.schema'
+import { Todo } from './models/todo.model'
 
 @Injectable()
 export class TodosService {
-  constructor(@InjectModel('Todos') private readonly todoModel: Model<Todo>) {}
+  constructor(
+    @InjectModel(Todo) private readonly todoModel: ReturnModelType<typeof Todo>
+  ) {}
 
-  async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const todo = new this.todoModel(createTodoDto)
+  async create(userId: string, createTodoDto: CreateTodoDto): Promise<Todo> {
+    const todo = new this.todoModel({
+      userId,
+      ...createTodoDto
+    })
 
     return await todo.save()
   }

@@ -12,7 +12,7 @@ import { SignUpDto } from './dto/sign-up.dto'
 import { GetUser } from './get-user.decorator'
 import { JwtAuthGuard } from './jwt-auth.guard'
 import { LocalAuthGuard } from './local-auth.guard'
-import { User } from './schemas/user.schema'
+import { User } from './models/user.model'
 
 @Controller('auth')
 export class AuthController {
@@ -33,10 +33,5 @@ export class AuthController {
   @Get('/me')
   me(@GetUser() user): User {
     return user
-  }
-
-  @Get('/test')
-  test(@Req() req) {
-    console.log(req.cookies)
   }
 }
