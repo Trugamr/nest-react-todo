@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   UseGuards,
   ValidationPipe
@@ -12,6 +14,8 @@ import { JwtPayload } from 'src/auth/jwt-payload.interface'
 import { CreateTodoDto } from './dto/create-todo.dto'
 import { TodosService } from './todos.service'
 import { Todo } from './models/todo.model'
+import { User } from 'src/auth/models/user.model'
+import { TodoIdDto } from './dto/todo-id.dto'
 
 @Controller('todos')
 export class TodosController {
@@ -23,11 +27,24 @@ export class TodosController {
     @GetUser() user: JwtPayload,
     @Body(ValidationPipe) createTodoDto: CreateTodoDto
   ): Promise<Todo> {
-    return this.todosService.create(user.id, createTodoDto)
+    return this.todosService.createTodo(user.id, createTodoDto)
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async getTodos(): Promise<Todo[]> {
-    return this.todosService.getTodos()
+  async getTodos(@GetUser() user: User): Promise<Todo[]> {
+    return this.todosService.getTodos(user.id)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/:id')
+  getTodo(@Param(ValidationPipe) todoIdDto: TodoIdDto) {
+    return this.todosService.getTodo(todoIdDto)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/:id')
+  deleteTodo(@Param(ValidationPipe) todoIdDto: TodoIdDto) {
+    return this.todosService.deleteTodo(todoIdDto)
   }
 }

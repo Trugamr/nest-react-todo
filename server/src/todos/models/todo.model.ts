@@ -2,6 +2,7 @@ import { modelOptions, prop } from '@typegoose/typegoose'
 
 @modelOptions({
   schemaOptions: {
+    timestamps: true,
     toJSON: {
       transform: function(doc, ret, options) {
         ret.id = ret._id
