@@ -1,8 +1,11 @@
 import React, { createContext, useReducer } from 'react'
 import axios from 'axios'
 import {
+  createTodo,
+  fetchTodos,
   fetchTodosStart,
   fetchTodosSuccess,
+  setLoading,
   TodosActionTypes
 } from './todos.actions'
 
@@ -13,7 +16,10 @@ const {
   FETCH_TODOS,
   FETCH_TODOS_START,
   FETCH_TODOS_SUCCESS,
-  FETCH_TODOS_FAILURE
+  FETCH_TODOS_FAILURE,
+  CREATE_TODO,
+  SET_LOADING,
+  DELETE_TODO
 } = TodosActionTypes
 
 const intitialValue = {
@@ -22,9 +28,10 @@ const intitialValue = {
   todos: []
 }
 
-const dispatchMiddleware = dispatch => async action => {
+const dispatchMiddleware = dispatch => async (action = {}) => {
   console.log(action)
-  const { type, payload } = action
+  const { type, payload = {} } = action
+  const { text } = payload
   let response
 
   switch (type) {
@@ -37,6 +44,24 @@ const dispatchMiddleware = dispatch => async action => {
         dispatch()
       }
       return dispatch(fetchTodosSuccess(response.data))
+    case CREATE_TODO:
+      dispatch(setLoading(true))
+      try {
+        response = await axios.post('/api/todos', { text })
+      } catch (error) {
+        console.log({ error })
+        return dispatch(setLoading(false))
+      }
+      return dispatchMiddleware(dispatch)(fetchTodos())
+    case DELETE_TODO:
+      dispatch(setLoading(true))
+      try {
+        response = await axios.delete(`/api/todos/${payload}`)
+      } catch (error) {
+        console.log({ error })
+        return dispatch(setLoading(false))
+      }
+      return dispatchMiddleware(dispatch)(fetchTodos())
     default:
       return dispatch(action)
   }
@@ -66,6 +91,11 @@ const todosReducer = (state, action = {}) => {
         todos: [],
         isLoading: false,
         error: payload
+      }
+    case SET_LOADING:
+      return {
+        ...state,
+        isLoading: payload
       }
     default:
       return state

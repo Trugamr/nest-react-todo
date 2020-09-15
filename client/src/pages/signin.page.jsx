@@ -18,7 +18,9 @@ const SignInPage = () => {
 
   return (
     <div className="flex justify-center items-center flex-grow bg-blue-100">
-      <SignInForm onFinish={handleOnSubmit} isLoading={isLoading} />
+      <div className="max-w-xl w-full flex justify-center">
+        <SignInForm onFinish={handleOnSubmit} isLoading={isLoading} />
+      </div>
     </div>
   )
 }

@@ -18,7 +18,9 @@ const SignUpPage = () => {
 
   return (
     <div className="flex justify-center items-center flex-grow bg-blue-100">
-      <SignUpForm onFinish={handleOnSubmit} isLoading={isLoading} />
+      <div className="max-w-xl w-full flex justify-center">
+        <SignUpForm onFinish={handleOnSubmit} isLoading={isLoading} />
+      </div>
     </div>
   )
 }

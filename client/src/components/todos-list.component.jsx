@@ -5,7 +5,7 @@ import { StarFilled, StarTwoTone } from '@ant-design/icons'
 const TodosList = ({
   setCompleted,
   setImportant,
-  removeTodo,
+  deleteTodo,
   editTodo,
   isLoading,
   todos = []
@@ -20,7 +20,15 @@ const TodosList = ({
           className={`bg-white p-4 ${
             todo.completed ? 'border-pink-400' : undefined
           } border-l-4`}
-          actions={[<span>edit</span>, <span>more</span>]}
+          actions={[
+            <span>edit</span>,
+            <span
+              className="cursor-pointer"
+              onClick={() => deleteTodo(todo.id)}
+            >
+              remove
+            </span>
+          ]}
         >
           <List.Item.Meta
             avatar={
