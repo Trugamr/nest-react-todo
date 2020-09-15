@@ -54,6 +54,7 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
       const { accessToken } = response.data
       return dispatch(userLoginSuccess(accessToken))
     case SIGNUP:
+      dispatch(userSignUpStart())
       try {
         response = await axios.post('/api/auth/signup', {
           name,

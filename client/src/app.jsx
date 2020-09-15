@@ -3,11 +3,12 @@ import { Switch, Route } from 'react-router-dom'
 import Header from './components/header.component'
 import HomePage from './pages/home.page'
 import SignInPage from './pages/signin.page'
-import 'antd/dist/antd.css'
-import './styles/app.css'
 import UserProvider from './contexts/user.context'
+import TodosProvider from './contexts/todos.context'
 import ProtectedRoute from './components/protected-route'
 import SignUpPage from './pages/signup.page'
+import 'antd/dist/antd.css'
+import './styles/app.css'
 
 function App() {
   return (
@@ -22,7 +23,9 @@ function App() {
             <SignInPage />
           </Route>
           <ProtectedRoute path="/">
-            <HomePage />
+            <TodosProvider>
+              <HomePage />
+            </TodosProvider>
           </ProtectedRoute>
         </Switch>
       </UserProvider>
