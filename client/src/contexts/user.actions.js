@@ -5,7 +5,11 @@ export const UserActionTypes = {
   LOGIN_START: 'LOGIN_START',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_FAILURE: 'LOGIN_FAILURE',
-  LOGOUT: 'LOGOUT'
+  LOGOUT: 'LOGOUT',
+  SIGNUP: 'SIGNUP',
+  SIGNUP_START: 'SIGNUP_START',
+  SIGNUP_SUCCESS: 'SIGNUP_SUCCESS',
+  SIGNUP_FAILURE: 'SIGNUP_FAILURE'
 }
 
 // eslint-disable-next-line
@@ -14,7 +18,11 @@ const {
   LOGIN_START,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-  LOGOUT
+  LOGOUT,
+  SIGNUP,
+  SIGNUP_START,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILURE
 } = UserActionTypes
 
 export const userLogin = ({ email, password }) => ({
@@ -31,6 +39,29 @@ export const userLoginSuccess = accessToken => {
   return { type: LOGIN_SUCCESS, payload: { ...profile, accessToken } }
 }
 
+export const userLoginFailure = errorMessage => ({
+  type: LOGIN_FAILURE,
+  payload: errorMessage
+})
+
 export const userLogout = () => ({
   type: LOGOUT
+})
+
+export const userSignUp = signUpDetails => ({
+  type: SIGNUP,
+  payload: signUpDetails
+})
+
+export const userSignUpStart = () => ({
+  type: SIGNUP_START
+})
+
+export const userSignUpSuccess = () => {
+  return { type: SIGNUP_SUCCESS }
+}
+
+export const userSignUpFailure = errorMessage => ({
+  type: SIGNUP_FAILURE,
+  payload: errorMessage
 })

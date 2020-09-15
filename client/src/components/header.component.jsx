@@ -1,13 +1,17 @@
 import React, { useContext } from 'react'
 import { PageHeader, Button } from 'antd'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { UserContext } from '../contexts/user.context'
 import { userLogout } from '../contexts/user.actions'
 
 const Header = () => {
   const history = useHistory()
+  const location = useLocation()
   const [user, userDispatch] = useContext(UserContext)
   const { isAuthenticated, profile } = user
+
+  const buttonText = location.pathname === '/signin' ? 'Sign Up' : 'Sign In'
+  const buttonPath = location.pathname === '/signin' ? '/signup' : '/signin'
 
   return (
     <div className="site-page-header-ghost-wrapper border-b-2 border-pink-500">
@@ -32,9 +36,9 @@ const Header = () => {
                 <Button
                   key="1"
                   type="primary"
-                  onClick={() => history.push('/signin')}
+                  onClick={() => history.push(buttonPath)}
                 >
-                  Sign In
+                  {buttonText}
                 </Button>
               ]
         }

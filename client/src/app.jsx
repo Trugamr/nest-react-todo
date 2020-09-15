@@ -7,6 +7,7 @@ import 'antd/dist/antd.css'
 import './styles/app.css'
 import UserProvider from './contexts/user.context'
 import ProtectedRoute from './components/protected-route'
+import SignUpPage from './pages/signup.page'
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
       <UserProvider>
         <Header />
         <Switch>
+          <Route path="/signup">
+            <SignUpPage />
+          </Route>
           <Route path="/signin">
             <SignInPage />
           </Route>
