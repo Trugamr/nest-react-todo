@@ -1,12 +1,15 @@
-import React, { createContext, useReducer } from 'react'
+import React, { createContext, useContext, useReducer } from 'react'
 import axios from 'axios'
 import {
   fetchTodos,
+  fetchTodosFailure,
   fetchTodosStart,
   fetchTodosSuccess,
   setLoading,
   TodosActionTypes
 } from './todos.actions'
+import { UserContext } from './user.context'
+import { userLogout } from './user.actions'
 
 export const TodosContext = createContext()
 
@@ -49,8 +52,11 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
         })
       } catch (error) {
         console.log({ error })
-        dispatch()
+        return dispatch(
+          fetchTodosFailure(error.message || 'Failed to get todos')
+        )
       }
+      if (!response) break
       return dispatch(fetchTodosSuccess(response.data))
     case CREATE_TODO:
       dispatch(setLoading(true))
@@ -139,6 +145,18 @@ const todosReducer = (state, action = {}) => {
 
 const TodosProvider = ({ children }) => {
   const [state, dispatch] = useReducer(todosReducer, intitialValue)
+  const [, userDispatch] = useContext(UserContext)
+
+  axios.interceptors.response.use(
+    response => response,
+    error => {
+      if (401 === error.response.status) {
+        userDispatch(userLogout())
+      } else {
+        return Promise.reject(error)
+      }
+    }
+  )
 
   return (
     <TodosContext.Provider value={[state, dispatchMiddleware(dispatch)]}>
