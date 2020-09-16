@@ -1,10 +1,10 @@
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Alert } from 'antd'
 import React from 'react'
 
-const SignUpForm = ({ onFinish, onFinishFailed, isLoading }) => {
+const SignUpForm = ({ onFinish, onFinishFailed, isLoading, error }) => {
   return (
     <div
-      className="bg-white rounded shadow-md p-6 pb-2 w-7/12"
+      className="bg-white rounded shadow-md p-6 w-7/12"
       style={{ minWidth: 300 }}
     >
       <Form
@@ -92,6 +92,7 @@ const SignUpForm = ({ onFinish, onFinishFailed, isLoading }) => {
           </Button>
         </Form.Item>
       </Form>
+      {error && <Alert type="error" message={error} banner />}
     </div>
   )
 }

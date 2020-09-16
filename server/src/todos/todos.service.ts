@@ -34,7 +34,7 @@ export class TodosService {
         text: { $regex: query ? query : '', $options: 'i' },
         ...otherFilters
       })
-      .sort({ updatedAt: 'desc' })
+      .sort({ createdAt: 'desc' })
   }
 
   async getTodo(todoIdDto: TodoIdDto): Promise<Todo> {

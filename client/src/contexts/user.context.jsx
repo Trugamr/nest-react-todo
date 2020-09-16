@@ -11,8 +11,10 @@ import {
   userLogout,
   userSignUpFailure,
   userSignUpStart,
-  userSignUpSuccess
+  userSignUpSuccess,
+  clearError
 } from './user.actions'
+import { useLocation } from 'react-router'
 
 const {
   LOGIN,
@@ -23,7 +25,8 @@ const {
   SIGNUP,
   SIGNUP_START,
   SIGNUP_SUCCESS,
-  SIGNUP_FAILURE
+  SIGNUP_FAILURE,
+  CLEAR_ERROR
 } = UserActionTypes
 
 export const UserContext = createContext()
@@ -43,13 +46,13 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
 
   switch (type) {
     case LOGIN:
-      console.log('chla')
       dispatch(userLoginStart())
       try {
         response = await axios.post('/api/auth/signin', { email, password })
       } catch (error) {
-        console.log({ error })
-        return dispatch(userLoginFailure('Sign In failed'))
+        return dispatch(
+          userLoginFailure(error.response.data.message || 'Sign In failed')
+        )
       }
       const { accessToken } = response.data
       return dispatch(userLoginSuccess(accessToken))
@@ -62,8 +65,9 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
           password
         })
       } catch (error) {
-        console.log({ error })
-        return dispatch(userSignUpFailure('Sign Up failed'))
+        return dispatch(
+          userSignUpFailure(error.response.data.message || 'Sign Up failed')
+        )
       }
       dispatch(userSignUpSuccess())
       return dispatchMiddleware(dispatch)(userLogin({ email, password })) // login after signup
@@ -114,6 +118,11 @@ const userReducer = (state, action = {}) => {
         profile: null,
         error: null
       }
+    case CLEAR_ERROR:
+      return {
+        ...state,
+        error: null
+      }
     default:
       return state
   }
@@ -121,6 +130,7 @@ const userReducer = (state, action = {}) => {
 
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState)
+  const location = useLocation()
 
   useEffect(() => {
     // get jwt from cookie
@@ -138,6 +148,11 @@ const UserProvider = ({ children }) => {
       console.log(error.message)
     }
   }, [])
+
+  // clear error on location path change
+  useEffect(() => {
+    dispatch(clearError())
+  }, [location])
 
   return (
     <UserContext.Provider value={[state, dispatchMiddleware(dispatch)]}>

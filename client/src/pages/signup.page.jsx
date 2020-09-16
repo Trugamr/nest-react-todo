@@ -7,7 +7,7 @@ import { UserContext } from '../contexts/user.context'
 const SignUpPage = () => {
   const [user, userDispatch] = useContext(UserContext)
 
-  const { isLoading, isAuthenticated } = user
+  const { isLoading, isAuthenticated, error } = user
 
   const handleOnSubmit = values => {
     const { name, email, password } = values
@@ -19,7 +19,11 @@ const SignUpPage = () => {
   return (
     <div className="flex justify-center items-center flex-grow bg-blue-100">
       <div className="max-w-xl w-full flex justify-center">
-        <SignUpForm onFinish={handleOnSubmit} isLoading={isLoading} />
+        <SignUpForm
+          error={error}
+          onFinish={handleOnSubmit}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   )

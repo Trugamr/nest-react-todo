@@ -7,7 +7,7 @@ import { UserContext } from '../contexts/user.context'
 const SignInPage = () => {
   const [user, userDispatch] = useContext(UserContext)
 
-  const { isLoading, isAuthenticated } = user
+  const { isLoading, isAuthenticated, error } = user
 
   const handleOnSubmit = values => {
     const { email, password } = values
@@ -19,7 +19,11 @@ const SignInPage = () => {
   return (
     <div className="flex justify-center items-center flex-grow bg-blue-100">
       <div className="max-w-xl w-full flex justify-center">
-        <SignInForm onFinish={handleOnSubmit} isLoading={isLoading} />
+        <SignInForm
+          error={error}
+          onFinish={handleOnSubmit}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   )

@@ -9,7 +9,8 @@ export const UserActionTypes = {
   SIGNUP: 'SIGNUP',
   SIGNUP_START: 'SIGNUP_START',
   SIGNUP_SUCCESS: 'SIGNUP_SUCCESS',
-  SIGNUP_FAILURE: 'SIGNUP_FAILURE'
+  SIGNUP_FAILURE: 'SIGNUP_FAILURE',
+  CLEAR_ERROR: 'CLEAR_ERROR'
 }
 
 // eslint-disable-next-line
@@ -22,7 +23,8 @@ const {
   SIGNUP,
   SIGNUP_START,
   SIGNUP_SUCCESS,
-  SIGNUP_FAILURE
+  SIGNUP_FAILURE,
+  CLEAR_ERROR
 } = UserActionTypes
 
 export const userLogin = ({ email, password }) => ({
@@ -64,4 +66,8 @@ export const userSignUpSuccess = () => {
 export const userSignUpFailure = errorMessage => ({
   type: SIGNUP_FAILURE,
   payload: errorMessage
+})
+
+export const clearError = () => ({
+  type: CLEAR_ERROR
 })
