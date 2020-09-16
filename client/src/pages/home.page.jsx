@@ -1,7 +1,14 @@
 import React, { useContext, useEffect } from 'react'
 import CreateTodoForm from '../components/create-todo-form.component'
 import TodosList from '../components/todos-list.component'
-import { createTodo, deleteTodo, fetchTodos } from '../contexts/todos.actions'
+import {
+  createTodo,
+  deleteTodo,
+  fetchTodos,
+  setCompleted,
+  setImportant,
+  setTodoText
+} from '../contexts/todos.actions'
 import { TodosContext } from '../contexts/todos.context'
 
 const HomePage = () => {
@@ -21,6 +28,18 @@ const HomePage = () => {
     todosDispatch(deleteTodo(id))
   }
 
+  const handleSetCompleted = (id, completed) => {
+    todosDispatch(setCompleted(id, completed))
+  }
+
+  const handleSetImportant = (id, important) => {
+    todosDispatch(setImportant(id, important))
+  }
+
+  const handleEditTodo = (id, text) => {
+    todosDispatch(setTodoText(id, text))
+  }
+
   return (
     <div className="bg-blue-100 flex-grow flex justify-center p-10">
       <div className="max-w-4xl w-full">
@@ -30,12 +49,17 @@ const HomePage = () => {
             🌊🌸
           </span>
         </h1>
-        <CreateTodoForm onFinish={handleCreateTodo} isLoading={isLoading} />
+        <div className="mb-6">
+          <CreateTodoForm onFinish={handleCreateTodo} isLoading={isLoading} />
+        </div>
         <TodosList
           todos={todos}
           isLoading={isLoading}
           deleteTodo={handleDeleteTodo}
           onFinish={handleCreateTodo}
+          setCompleted={handleSetCompleted}
+          setImportant={handleSetImportant}
+          editTodo={handleEditTodo}
         />
       </div>
     </div>

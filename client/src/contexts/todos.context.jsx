@@ -1,7 +1,6 @@
 import React, { createContext, useReducer } from 'react'
 import axios from 'axios'
 import {
-  createTodo,
   fetchTodos,
   fetchTodosStart,
   fetchTodosSuccess,
@@ -19,7 +18,10 @@ const {
   FETCH_TODOS_FAILURE,
   CREATE_TODO,
   SET_LOADING,
-  DELETE_TODO
+  DELETE_TODO,
+  TODO_SET_COMPLETED,
+  TODO_SET_IMPORTANT,
+  TODO_SET_TEXT
 } = TodosActionTypes
 
 const intitialValue = {
@@ -31,8 +33,10 @@ const intitialValue = {
 const dispatchMiddleware = dispatch => async (action = {}) => {
   console.log(action)
   const { type, payload = {} } = action
-  const { text } = payload
+  const { text, id, completed, important } = payload
   let response
+
+  const refetchTodos = () => dispatchMiddleware(dispatch)(fetchTodos())
 
   switch (type) {
     case FETCH_TODOS:
@@ -52,7 +56,7 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
         console.log({ error })
         return dispatch(setLoading(false))
       }
-      return dispatchMiddleware(dispatch)(fetchTodos())
+      return refetchTodos()
     case DELETE_TODO:
       dispatch(setLoading(true))
       try {
@@ -61,7 +65,34 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
         console.log({ error })
         return dispatch(setLoading(false))
       }
-      return dispatchMiddleware(dispatch)(fetchTodos())
+      return refetchTodos()
+    case TODO_SET_COMPLETED:
+      dispatch(setLoading(true))
+      try {
+        response = await axios.patch(`/api/todos/${id}`, { completed })
+      } catch (error) {
+        console.log({ error })
+        return dispatch(setLoading(false))
+      }
+      return refetchTodos()
+    case TODO_SET_IMPORTANT:
+      dispatch(setLoading(true))
+      try {
+        response = await axios.patch(`/api/todos/${id}`, { important })
+      } catch (error) {
+        console.log({ error })
+        return dispatch(setLoading(false))
+      }
+      return refetchTodos()
+    case TODO_SET_TEXT:
+      dispatch(setLoading(true))
+      try {
+        response = await axios.patch(`/api/todos/${id}`, { text })
+      } catch (error) {
+        console.log({ error })
+        return dispatch(setLoading(false))
+      }
+      return refetchTodos()
     default:
       return dispatch(action)
   }
