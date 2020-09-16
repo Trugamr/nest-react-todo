@@ -42,7 +42,11 @@ const dispatchMiddleware = dispatch => async (action = {}) => {
     case FETCH_TODOS:
       dispatch(fetchTodosStart())
       try {
-        response = await axios.get('/api/todos')
+        response = await axios.get('/api/todos', {
+          params: {
+            ...payload
+          }
+        })
       } catch (error) {
         console.log({ error })
         dispatch()

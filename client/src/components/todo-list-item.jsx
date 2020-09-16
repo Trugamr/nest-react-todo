@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { StarFilled, StarTwoTone } from '@ant-design/icons'
 import { Input, List } from 'antd'
 import { useOnClickOutside } from '../hooks/useOnClickOutside'
@@ -12,6 +12,12 @@ const TodoListItem = ({
 }) => {
   const [editing, toggleEditing] = useState(false)
   const [todoText, setTodoText] = useState(todo.text)
+
+  // update todo text on new todos
+  useEffect(() => {
+    setTodoText(todo.text)
+  }, [todo])
+
   const ref = useRef()
   useOnClickOutside(ref, () => toggleEditing(false))
 

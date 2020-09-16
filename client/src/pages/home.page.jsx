@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import CreateTodoForm from '../components/create-todo-form.component'
 import TodosList from '../components/todos-list.component'
+import TodosSearch from '../contexts/todos-search.component'
 import {
   createTodo,
   deleteTodo,
@@ -40,6 +41,10 @@ const HomePage = () => {
     todosDispatch(setTodoText(id, text))
   }
 
+  const handleSearchTodos = (filters = {}) => {
+    todosDispatch(fetchTodos(filters))
+  }
+
   return (
     <div className="bg-blue-100 flex-grow flex justify-center p-10">
       <div className="max-w-4xl w-full">
@@ -52,6 +57,7 @@ const HomePage = () => {
         <div className="mb-6">
           <CreateTodoForm onFinish={handleCreateTodo} isLoading={isLoading} />
         </div>
+        <TodosSearch onSearch={handleSearchTodos} isLoading={isLoading} />
         <TodosList
           todos={todos}
           isLoading={isLoading}
